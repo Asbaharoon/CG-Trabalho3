@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/Users/NOT/workspace/CG-Trabalho3/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="C:/Users/NOT/workspace/CG-Trabalho3/jogl.jar"/>
+	<classpathentry kind="lib" path="gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="jogl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
