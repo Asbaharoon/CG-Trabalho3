@@ -22,7 +22,7 @@ public class Frame extends JFrame{
 
 	public Frame() {		
 		super("Trabalho 3");   
-		setBounds(300,250,janelaLargura,janelaAltura+22);  // 400 + 22 da borda do titulo da janela
+		setBounds(300,250,janelaLargura+16,janelaAltura+22+17);  // 400 + 22 da borda do titulo da janela
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 
@@ -41,6 +41,9 @@ public class Frame extends JFrame{
 		GLCanvas canvas = new GLCanvas(glCaps);
 		add(canvas,BorderLayout.CENTER);
 		canvas.addGLEventListener(renderer);        
+		canvas.addMouseListener(renderer);        
+		canvas.addMouseMotionListener(renderer);        
+		canvas.addKeyListener(renderer);        
 		canvas.requestFocus();			
 	}		
 	

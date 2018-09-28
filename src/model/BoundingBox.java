@@ -1,4 +1,4 @@
-package aplicativo_grafico;
+package model;
 
 import javax.media.opengl.GL;
 

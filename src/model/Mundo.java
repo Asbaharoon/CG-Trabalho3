@@ -17,17 +17,18 @@ public class Mundo {
 	private GL gl;
 	private GLU glu;
 	
-	private Mundo(GL gl, GLU glu) {
-		this.gl = gl;
-		this.glu = glu;
-	}
 
 	public static Mundo getInstance() {
+		if (instance == null) {
+			instance = new Mundo();
+		}
+		
 		return instance;
 	}
 	
 	public void initMundo(GL gl, GLU glu) {
-		instance = new Mundo(gl, glu);
+		this.gl = gl;
+		this.glu = glu;
 		objetosGraficos = new LinkedList<>();
 		camera = new Camera(glu);
 	}
@@ -40,6 +41,18 @@ public class Mundo {
 
 	public void atualizaOrtho() {
 		camera.atualizaOrtho();
+	}
+
+	public void atualizarPoligonoSelecionado(ObjetoGrafico objetoGrafico) {
+		this.poligonoSelecionado = objetoGrafico;
+	}
+
+	public ObjetoGrafico getPoligonoSelecionado() {
+		return poligonoSelecionado;
+	}
+
+	public void adicionarObjetoGrafico(ObjetoGrafico objetoGrafico) {
+		this.objetosGraficos.add(objetoGrafico);
 	}
 
 }

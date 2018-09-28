@@ -6,8 +6,8 @@ public class Camera {
 
 	private float xMin = 0.0f;
 	private float xMax = 400.0f;
-	private float yMin = 0.0f;
-	private float yMax = 400.0f;
+	private float yMin = 400.0f;
+	private float yMax = 0.0f;
 	
 //	private float quantidadeAumentar = 10;
 	

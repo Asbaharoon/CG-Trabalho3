@@ -4,13 +4,11 @@ import java.util.LinkedList;
 
 import javax.media.opengl.GL;
 
-import aplicativo_grafico.Point4D;
-
 public class ObjetoGrafico {
 
 	private LinkedList<Point4D> pontos = new LinkedList<>();
-	private int primitiva = GL.GL_LINE_LOOP;
-	private Cor cor;
+	private int primitiva = GL.GL_LINE_STRIP;
+	private Cor cor = new Cor();
 
 	public LinkedList<Point4D> getPontos() {
 		return pontos;
@@ -42,6 +40,10 @@ public class ObjetoGrafico {
 
 	public void setCor(Cor cor) {
 		this.cor = cor;
+	}
+	
+	public void atualizarCor() {
+		
 	}
 
 	public void desenhar(GL gl) {

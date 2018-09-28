@@ -1,4 +1,4 @@
-package aplicativo_grafico;
+package model;
 
 public final class Point4D {
 	private double x;
@@ -17,6 +17,10 @@ public final class Point4D {
 		this.w = w;
 	}
 	
+	public Point4D(int x, int y) {
+		this(x, y, 0, 1);
+	}
+
 	public double GetX() {
 		return x;
 	}
