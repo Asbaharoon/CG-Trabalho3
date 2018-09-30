@@ -1,6 +1,7 @@
 package model;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 import javax.media.opengl.GL;
 
@@ -40,10 +41,6 @@ public class ObjetoGrafico {
 
 	public void setCor(Cor cor) {
 		this.cor = cor;
-	}
-	
-	public void atualizarCor() {
-		
 	}
 
 	public void desenhar(GL gl) {

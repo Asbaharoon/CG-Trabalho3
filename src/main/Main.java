@@ -28,7 +28,7 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 		glDrawable.setGL(new DebugGL(gl));
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
-		Mundo.getInstance().initMundo(gl, glu); 
+		Mundo.getInstance().initMundo(gl, glu);
 	}
 
 	public void display(GLAutoDrawable arg0) {
@@ -131,14 +131,41 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		ObjetoGrafico poligonoSelecionado = Mundo.getInstance().getPoligonoSelecionado();
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_SPACE:
-			ObjetoGrafico poligonoSelecionado = Mundo.getInstance().getPoligonoSelecionado();
 			poligonoSelecionado.setPrimitiva(GL.GL_LINE_LOOP);
 			Mundo.getInstance().atualizarPoligonoSelecionado(null);
 			glDrawable.display();
 			break;
-
+		case KeyEvent.VK_C:
+			poligonoSelecionado.getCor().atualizarCorAleatoria();
+			glDrawable.display();
+			break;
+		case KeyEvent.VK_NUMPAD1:
+			poligonoSelecionado.getCor().aumentarQtdVermelho();
+			glDrawable.display();
+			break;
+		case KeyEvent.VK_NUMPAD2:
+			poligonoSelecionado.getCor().diminuirQtdVermelho();
+			glDrawable.display();
+			break;
+		case KeyEvent.VK_NUMPAD3:
+			poligonoSelecionado.getCor().aumentarQtdVerde();
+			glDrawable.display();
+			break;
+		case KeyEvent.VK_NUMPAD4:
+			poligonoSelecionado.getCor().diminuirQtdVerde();
+			glDrawable.display();
+			break;
+		case KeyEvent.VK_NUMPAD5:
+			poligonoSelecionado.getCor().aumentarQtdAzul();
+			glDrawable.display();
+			break;
+		case KeyEvent.VK_NUMPAD6:
+			poligonoSelecionado.getCor().diminuirQtdAzul();
+			glDrawable.display();
+			break;
 		default:
 			break;
 		}
