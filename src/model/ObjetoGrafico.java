@@ -9,6 +9,7 @@ public class ObjetoGrafico {
 	private LinkedList<Point4D> pontos = new LinkedList<>();
 	private int primitiva = GL.GL_LINE_STRIP;
 	private Cor cor = new Cor();
+	private BoundingBox boundingBox = new BoundingBox();
 
 	public LinkedList<Point4D> getPontos() {
 		return pontos;
