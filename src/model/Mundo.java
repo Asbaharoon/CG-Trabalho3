@@ -55,4 +55,13 @@ public class Mundo {
 		this.objetosGraficos.add(objetoGrafico);
 	}
 
+	public ObjetoGrafico getObjetoClicado(int x, int y) {
+		for (ObjetoGrafico objetoGrafico : objetosGraficos) {
+			if (objetoGrafico.isSelecionado(x, y)) {
+				return objetoGrafico;
+			}
+		}
+		return null;
+	}
+
 }

@@ -1,7 +1,2 @@
-/model/
 /main/
-/gluegen-rt.dll
-/jogl.dll
-/jogl_awt.dll
-/jogl_cg.dll
-/aplicativo_grafico/
+/model/

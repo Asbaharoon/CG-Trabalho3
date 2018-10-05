@@ -78,14 +78,22 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		ObjetoGrafico objetoGrafico = Mundo.getInstance().getPoligonoSelecionado();
-		if (objetoGrafico == null) {
-			objetoGrafico = new ObjetoGrafico();
-			objetoGrafico.adicionarPonto(new Point4D(x, y));
-			objetoGrafico.adicionarPonto(new Point4D(x, y));
-			Mundo.getInstance().adicionarObjetoGrafico(objetoGrafico);
+		
+		ObjetoGrafico objetoGrafico = Mundo.getInstance().getObjetoClicado(x, y);
+		if (objetoGrafico != null) {
+			// selecionou um carar
+//			Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
 		} else {
-			objetoGrafico.adicionarPonto(new Point4D(x, y));
+			// ta desenhando
+			objetoGrafico = Mundo.getInstance().getPoligonoSelecionado();
+			if (objetoGrafico == null) {
+				objetoGrafico = new ObjetoGrafico();
+				objetoGrafico.adicionarPonto(new Point4D(x, y));
+				objetoGrafico.adicionarPonto(new Point4D(x, y));
+				Mundo.getInstance().adicionarObjetoGrafico(objetoGrafico);
+			} else {
+				objetoGrafico.adicionarPonto(new Point4D(x, y));
+			}
 		}
 		
 		Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);

@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.PointerInfo;
+
 import javax.media.opengl.GL;
 
 public final class BoundingBox {
@@ -126,6 +128,17 @@ public final class BoundingBox {
 	/// Obter ponto do centro da BBox.
 	public Point4D obterCentro() {
 		return centro;
+	}
+	
+	public boolean isPonto2DDentro(Point4D ponto) {
+		return obterMenorX() <= ponto.GetX() && //
+			   obterMaiorX() >= ponto.GetX() && //
+			   obterMenorY() <= ponto.GetY() && //
+			   obterMaiorY() >= ponto.GetY();
+	}
+
+	public boolean isPonto2DDentro(double x, double y) {
+		return isPonto2DDentro(new Point4D(x, y, 0.0, 1.0));
 	}
 
 }
