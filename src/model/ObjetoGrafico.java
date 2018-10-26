@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.media.opengl.GL;
 
@@ -11,14 +13,21 @@ public class ObjetoGrafico {
 	private Cor cor = new Cor();
 	private BoundingBox boundingBox;
 
+	private Transformacao4D transformacao4D = new Transformacao4D();
+	private Transformacao4D matrizTmpTranslacao = new Transformacao4D();
+	private Transformacao4D matrizTmpEscala = new Transformacao4D();
+	private Transformacao4D matrizTmpTranslacaoInversa = new Transformacao4D();
+	private Transformacao4D matrizGlobal = new Transformacao4D();
+	
+	private List<ObjetoGrafico> objetosFilhos = new ArrayList<>();
+
 	public LinkedList<Point4D> getPontos() {
 		return pontos;
 	}
-	
+
 	public void adicionarPonto(Point4D point4d) {
 		if (this.pontos.isEmpty()) {
-			boundingBox = new BoundingBox(point4d.GetX(), point4d.GetY(), 0, 
-					point4d.GetX(), point4d.GetY(), 0);
+			boundingBox = new BoundingBox(point4d.GetX(), point4d.GetY(), 0, point4d.GetX(), point4d.GetY(), 0);
 		}
 		pontos.add(point4d);
 	}
@@ -49,52 +58,114 @@ public class ObjetoGrafico {
 
 	public void desenhar(GL gl) {
 		gl.glColor3f(getCor().getRed(), getCor().getGreen(), getCor().getBlue());
-		gl.glBegin(primitiva);
-		for (Point4D point4d : pontos) {
-			gl.glVertex2d(point4d.GetX(), point4d.GetY());
-		}
-		gl.glEnd();
+
+		gl.glPushMatrix();
+			gl.glMultMatrixd(transformacao4D.GetDate(), 0);
+
+			gl.glBegin(primitiva);
+			for (Point4D point4d : pontos) {
+				gl.glVertex2d(point4d.GetX(), point4d.GetY());
+			}
+	
+			gl.glEnd();
+
+			objetosFilhos.forEach(f -> f.desenhar(gl));
+			
+			for (Point4D point4d : pontos) {
+				boundingBox.atualizarBBox(point4d);
+			}
 		
-		if (this.primitiva == GL.GL_LINE_LOOP) {
-			desenharBoundingBox(gl);
-		}
+		gl.glPopMatrix();
+
+
 		
 	}
-	
+
 	public void desenharBoundingBox(GL gl) {
-		for (Point4D point4d : pontos) {
-			boundingBox.atualizarBBox(point4d);
-		}
 		boundingBox.desenharOpenGLBBox(gl);
 	}
-	
+
 	public BoundingBox getBoundingBox() {
 		return boundingBox;
 	}
 
-
 	public boolean isSelecionado(int xClique, int yClique) {
-		if (boundingBox.isPonto2DDentro(xClique ,yClique)) {
+		if (boundingBox.isPonto2DDentro(xClique, yClique)) {
 
 			int paridade = 0;
 			for (int i = 0; i < pontos.size(); i++) {
 				if (i + 1 < pontos.size()) {
-					Point4D ponto1 = pontos.get(i);
-					Point4D ponto2 = pontos.get(i+1);
-					double ti = (yClique - ponto1.GetY()) / (ponto2.GetY() - ponto1.GetY());
-					if (ti >=0 && ti <= 1) {
-						double x = ponto1.GetX() + (ponto2.GetX() - ponto1.GetX()) * ti;  
-						if (x > xClique) {
-							paridade++;
-						}
+					if (isPontoIntersecciona(xClique, yClique, pontos.get(i), pontos.get(i + 1))) {
+						paridade++;
 					}
 				}
 			}
-			
+
+			if (isPontoIntersecciona(xClique, yClique, pontos.getLast(), pontos.getFirst())) {
+				paridade++;
+			}
+
 			return paridade % 2 == 1;
-			
+
 		}
 		return false;
 	}
 
+	private boolean isPontoIntersecciona(int xClique, int yClique, Point4D ponto1, Point4D ponto2) {
+		double ti = (yClique - ponto1.GetY()) / (ponto2.GetY() - ponto1.GetY());
+		if (ti >= 0 && ti <= 1) {
+			double x = ponto1.GetX() + (ponto2.GetX() - ponto1.GetX()) * ti;
+			return x > xClique;
+		}
+		return false;
+	}
+
+	public void transladar(double x, double y) {
+		Transformacao4D matrizTranslate = new Transformacao4D();
+		matrizTranslate.atribuirTranslacao(x, y, 0.0d);
+		transformacao4D = matrizTranslate.transformMatrix(transformacao4D);
+	}
+
+	public void escalar(double escala) {
+		Point4D ptoFixo = getCentro();
+		matrizGlobal.atribuirIdentidade();
+
+		matrizTmpTranslacao.atribuirTranslacao(ptoFixo.GetX(), ptoFixo.GetY(), ptoFixo.GetZ());
+		matrizGlobal = matrizTmpTranslacao.transformMatrix(matrizGlobal);
+
+		matrizTmpEscala.atribuirEscala(escala, escala, 1.0);
+		matrizGlobal = matrizTmpEscala.transformMatrix(matrizGlobal);
+
+		ptoFixo.inverterSinal(ptoFixo);
+		matrizTmpTranslacaoInversa.atribuirTranslacao(ptoFixo.GetX(), ptoFixo.GetY(), ptoFixo.GetZ());
+		matrizGlobal = matrizTmpTranslacaoInversa.transformMatrix(matrizGlobal);
+
+		transformacao4D = transformacao4D.transformMatrix(matrizGlobal);
+	}
+
+	public void rotacionar(double angulo) {
+		Point4D ptoFixo = getCentro();
+		matrizGlobal.atribuirIdentidade();
+
+		matrizTmpTranslacao.atribuirTranslacao(ptoFixo.GetX(), ptoFixo.GetY(), ptoFixo.GetZ());
+		matrizGlobal = matrizTmpTranslacao.transformMatrix(matrizGlobal);
+
+		matrizTmpEscala.atribuirRotacaoZ(Transformacao4D.DEG_TO_RAD * angulo);
+		matrizGlobal = matrizTmpEscala.transformMatrix(matrizGlobal);
+
+		ptoFixo.inverterSinal(ptoFixo);
+		matrizTmpTranslacaoInversa.atribuirTranslacao(ptoFixo.GetX(), ptoFixo.GetY(), ptoFixo.GetZ());
+		matrizGlobal = matrizTmpTranslacaoInversa.transformMatrix(matrizGlobal);
+
+		transformacao4D = transformacao4D.transformMatrix(matrizGlobal);
+	}
+
+	public Point4D getCentro() {
+		double maiorX = pontos.stream().mapToDouble(Point4D::GetX).max().getAsDouble();
+		double menorX = pontos.stream().mapToDouble(Point4D::GetX).min().getAsDouble();
+		double maiorY = pontos.stream().mapToDouble(Point4D::GetY).max().getAsDouble();
+		double menorY = pontos.stream().mapToDouble(Point4D::GetY).min().getAsDouble();
+		return new Point4D(((maiorX + menorX) / 2) * -1, ((maiorY + menorY) / 2) * -1);
+	}
+	
 }

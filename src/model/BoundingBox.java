@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.PointerInfo;
-
 import javax.media.opengl.GL;
 
 public final class BoundingBox {
@@ -12,7 +10,7 @@ public final class BoundingBox {
 	private double maiorY;
 	private double maiorZ;
 	private Point4D centro = new Point4D();
-//    private Color color;
+    private Cor color = Cor.VERMELHO;
 
 
 	public BoundingBox() {
@@ -67,7 +65,7 @@ public final class BoundingBox {
 	}
 
 	public void desenharOpenGLBBox(GL gl) {
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
+		gl.glColor3f(color.getRed(), color.getBlue(), color.getGreen());
 
 		gl.glBegin (GL.GL_LINE_LOOP);
 			gl.glVertex3d (menorX, maiorY, menorZ);

@@ -1,5 +1,13 @@
 package model;
 
+/**
+ * @author Nicolas Viana
+ *
+ */
+/**
+ * @author Nicolas Viana
+ *
+ */
 public final class Point4D {
 	private double x;
 	private double y;
@@ -17,10 +25,17 @@ public final class Point4D {
 		this.w = w;
 	}
 	
-	public Point4D(int x, int y) {
+	public Point4D(double x, double y) {
 		this(x, y, 0, 1);
 	}
 
+	public Point4D inverterSinal(Point4D pto) {
+		pto.SetX(pto.GetX()*-1);
+		pto.SetY(pto.GetY()*-1);
+		pto.SetZ(pto.GetZ()*-1);
+		return pto;
+	}
+	
 	public double GetX() {
 		return x;
 	}
@@ -51,6 +66,11 @@ public final class Point4D {
 
 	public void SetW(double w) {
 		this.w = w;
+	}
+
+	@Override
+	public String toString() {
+		return "[x=" + x + ", y=" + y + "]";
 	}
 	
 }

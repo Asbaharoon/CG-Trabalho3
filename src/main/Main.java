@@ -27,7 +27,7 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		
+
 		Mundo.getInstance().initMundo(gl, glu);
 	}
 
@@ -36,12 +36,12 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		
+
 		Mundo.getInstance().atualizaOrtho();
 
 		SRU();
 		gl.glLineWidth(3.0f);
-		
+
 		Mundo.getInstance().listarObjetosGraficos();
 
 		gl.glFlush();
@@ -71,68 +71,67 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 
 	@Override
 	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		
+
 		ObjetoGrafico objetoGrafico = Mundo.getInstance().getObjetoClicado(x, y);
 		if (objetoGrafico != null) {
-			// selecionou um carar
-//			Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
+			Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
 		} else {
 			// ta desenhando
-			objetoGrafico = Mundo.getInstance().getPoligonoSelecionado();
-			if (objetoGrafico == null) {
+			if (!Mundo.getInstance().isDesenhando()) {
+				Mundo.getInstance().marcarDesenhando();
 				objetoGrafico = new ObjetoGrafico();
 				objetoGrafico.adicionarPonto(new Point4D(x, y));
 				objetoGrafico.adicionarPonto(new Point4D(x, y));
 				Mundo.getInstance().adicionarObjetoGrafico(objetoGrafico);
 			} else {
+				objetoGrafico = Mundo.getInstance().getPoligonoSelecionado();
 				objetoGrafico.adicionarPonto(new Point4D(x, y));
 			}
+			Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
 		}
-		
-		Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
-		
+
 		glDrawable.display();
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (Mundo.getInstance().getPoligonoSelecionado() != null) {
+		if (Mundo.getInstance().isDesenhando()) {
 			Point4D last = Mundo.getInstance().getPoligonoSelecionado().getPontos().getLast();
 			last.SetX(e.getX());
 			last.SetY(e.getY());
-			
+
 			glDrawable.display();
 		}
 	}
@@ -140,53 +139,73 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 	@Override
 	public void keyPressed(KeyEvent e) {
 		ObjetoGrafico poligonoSelecionado = Mundo.getInstance().getPoligonoSelecionado();
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_SPACE:
-			poligonoSelecionado.setPrimitiva(GL.GL_LINE_LOOP);
-			Mundo.getInstance().atualizarPoligonoSelecionado(null);
+		if (poligonoSelecionado != null) {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_SPACE:
+				poligonoSelecionado.setPrimitiva(GL.GL_LINE_LOOP);
+				Mundo.getInstance().desmarcarDesenhando();
+				Mundo.getInstance().atualizarPoligonoSelecionado(null);
+				break;
+			case KeyEvent.VK_C:
+				poligonoSelecionado.getCor().atualizarCorAleatoria();
+				break;
+			case KeyEvent.VK_NUMPAD1:
+				poligonoSelecionado.getCor().aumentarQtdVermelho();
+				break;
+			case KeyEvent.VK_NUMPAD2:
+				poligonoSelecionado.getCor().diminuirQtdVermelho();
+				break;
+			case KeyEvent.VK_NUMPAD3:
+				poligonoSelecionado.getCor().aumentarQtdVerde();
+				break;
+			case KeyEvent.VK_NUMPAD4:
+				poligonoSelecionado.getCor().diminuirQtdVerde();
+				break;
+			case KeyEvent.VK_NUMPAD5:
+				poligonoSelecionado.getCor().aumentarQtdAzul();
+				break;
+			case KeyEvent.VK_NUMPAD6:
+				poligonoSelecionado.getCor().diminuirQtdAzul();
+				break;
+				
+			case KeyEvent.VK_UP:
+				poligonoSelecionado.transladar(0, -5);
+				break;
+			case KeyEvent.VK_DOWN:
+				poligonoSelecionado.transladar(0, 5);
+				break;
+			case KeyEvent.VK_RIGHT:
+				poligonoSelecionado.transladar(5, 0);
+				break;
+			case KeyEvent.VK_LEFT:
+				poligonoSelecionado.transladar(-5, 0);
+				break;
+
+			case KeyEvent.VK_PAGE_UP:
+				poligonoSelecionado.escalar(1.5);
+				break;
+			case KeyEvent.VK_PAGE_DOWN:
+				poligonoSelecionado.escalar(0.75);
+				break;
+
+			case KeyEvent.VK_R:
+				poligonoSelecionado.rotacionar(5);
+				break;
+			default:
+				break;
+			}
 			glDrawable.display();
-			break;
-		case KeyEvent.VK_C:
-			poligonoSelecionado.getCor().atualizarCorAleatoria();
-			glDrawable.display();
-			break;
-		case KeyEvent.VK_NUMPAD1:
-			poligonoSelecionado.getCor().aumentarQtdVermelho();
-			glDrawable.display();
-			break;
-		case KeyEvent.VK_NUMPAD2:
-			poligonoSelecionado.getCor().diminuirQtdVermelho();
-			glDrawable.display();
-			break;
-		case KeyEvent.VK_NUMPAD3:
-			poligonoSelecionado.getCor().aumentarQtdVerde();
-			glDrawable.display();
-			break;
-		case KeyEvent.VK_NUMPAD4:
-			poligonoSelecionado.getCor().diminuirQtdVerde();
-			glDrawable.display();
-			break;
-		case KeyEvent.VK_NUMPAD5:
-			poligonoSelecionado.getCor().aumentarQtdAzul();
-			glDrawable.display();
-			break;
-		case KeyEvent.VK_NUMPAD6:
-			poligonoSelecionado.getCor().diminuirQtdAzul();
-			glDrawable.display();
-			break;
-		default:
-			break;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
+
 	}
 
 }

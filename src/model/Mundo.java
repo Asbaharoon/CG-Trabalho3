@@ -17,6 +17,7 @@ public class Mundo {
 	private GL gl;
 	private GLU glu;
 	
+	private boolean isDesenhando = false;
 
 	public static Mundo getInstance() {
 		if (instance == null) {
@@ -64,4 +65,16 @@ public class Mundo {
 		return null;
 	}
 
+	public void marcarDesenhando() {
+		this.isDesenhando = true;
+	}
+
+	public void desmarcarDesenhando() {
+		this.isDesenhando = false;
+	}
+	
+	public boolean isDesenhando() {
+		return isDesenhando;
+	}
+	
 }
