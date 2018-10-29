@@ -36,7 +36,7 @@ public class Mundo {
 	
 	public void listarObjetosGraficos() {
 		for (ObjetoGrafico objetoGrafico : objetosGraficos) {
-			objetoGrafico.desenhar(gl);
+			objetoGrafico.desenhar(gl, poligonoSelecionado);
 		}
 	}
 
@@ -58,9 +58,12 @@ public class Mundo {
 
 	public ObjetoGrafico getObjetoClicado(int x, int y) {
 		for (ObjetoGrafico objetoGrafico : objetosGraficos) {
-			if (objetoGrafico.isSelecionado(x, y)) {
-				return objetoGrafico;
+			
+			ObjetoGrafico selecionado = objetoGrafico.isSelecionado(x, y);
+			if (selecionado != null) {
+				return selecionado;
 			}
+			
 		}
 		return null;
 	}

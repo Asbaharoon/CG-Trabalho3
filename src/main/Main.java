@@ -11,6 +11,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.swing.SwingUtilities;
 
 import model.Mundo;
 import model.ObjetoGrafico;
@@ -78,18 +79,28 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-
-		ObjetoGrafico objetoGrafico = Mundo.getInstance().getObjetoClicado(x, y);
-		if (objetoGrafico != null) {
-			Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
-		} else {
+		ObjetoGrafico objetoGrafico;
+		if (SwingUtilities.isRightMouseButton(e)) {
+			objetoGrafico = Mundo.getInstance().getObjetoClicado(x, y);
+			if (objetoGrafico != null) {
+				Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
+			}
+		} else if (SwingUtilities.isLeftMouseButton(e)) {
 			// ta desenhando
 			if (!Mundo.getInstance().isDesenhando()) {
 				Mundo.getInstance().marcarDesenhando();
+				
 				objetoGrafico = new ObjetoGrafico();
 				objetoGrafico.adicionarPonto(new Point4D(x, y));
 				objetoGrafico.adicionarPonto(new Point4D(x, y));
-				Mundo.getInstance().adicionarObjetoGrafico(objetoGrafico);
+				
+				ObjetoGrafico pai = Mundo.getInstance().getPoligonoSelecionado();
+				if (pai != null) {
+					pai.getObjetosFilhos().add(objetoGrafico);
+				} else {
+					Mundo.getInstance().adicionarObjetoGrafico(objetoGrafico);
+				}
+				
 			} else {
 				objetoGrafico = Mundo.getInstance().getPoligonoSelecionado();
 				objetoGrafico.adicionarPonto(new Point4D(x, y));
@@ -143,6 +154,7 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 				poligonoSelecionado.setPrimitiva(GL.GL_LINE_LOOP);
+				poligonoSelecionado.getPontos().removeLast();
 				Mundo.getInstance().desmarcarDesenhando();
 				Mundo.getInstance().atualizarPoligonoSelecionado(null);
 				break;
@@ -167,7 +179,7 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 			case KeyEvent.VK_NUMPAD6:
 				poligonoSelecionado.getCor().diminuirQtdAzul();
 				break;
-				
+
 			case KeyEvent.VK_UP:
 				poligonoSelecionado.transladar(0, -5);
 				break;

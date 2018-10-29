@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.media.opengl.GL;
 
@@ -28,6 +29,8 @@ public class ObjetoGrafico {
 	public void adicionarPonto(Point4D point4d) {
 		if (this.pontos.isEmpty()) {
 			boundingBox = new BoundingBox(point4d.GetX(), point4d.GetY(), 0, point4d.GetX(), point4d.GetY(), 0);
+		} else {
+			boundingBox.atualizarBBox(point4d);
 		}
 		pontos.add(point4d);
 	}
@@ -56,7 +59,7 @@ public class ObjetoGrafico {
 		this.cor = cor;
 	}
 
-	public void desenhar(GL gl) {
+	public void desenhar(GL gl, ObjetoGrafico selecionado) {
 		gl.glColor3f(getCor().getRed(), getCor().getGreen(), getCor().getBlue());
 
 		gl.glPushMatrix();
@@ -69,15 +72,12 @@ public class ObjetoGrafico {
 	
 			gl.glEnd();
 
-			objetosFilhos.forEach(f -> f.desenhar(gl));
-			
-			for (Point4D point4d : pontos) {
-				boundingBox.atualizarBBox(point4d);
+			if (selecionado == this) {
+				this.boundingBox.desenharOpenGLBBox(gl);
 			}
 		
+			objetosFilhos.forEach(f -> f.desenhar(gl, selecionado));
 		gl.glPopMatrix();
-
-
 		
 	}
 
@@ -88,8 +88,12 @@ public class ObjetoGrafico {
 	public BoundingBox getBoundingBox() {
 		return boundingBox;
 	}
-
-	public boolean isSelecionado(int xClique, int yClique) {
+	
+	public List<ObjetoGrafico> getObjetosFilhos() {
+		return objetosFilhos;
+	}
+	
+	public ObjetoGrafico isSelecionado(int xClique, int yClique) {
 		if (boundingBox.isPonto2DDentro(xClique, yClique)) {
 
 			int paridade = 0;
@@ -105,10 +109,12 @@ public class ObjetoGrafico {
 				paridade++;
 			}
 
-			return paridade % 2 == 1;
+			if (paridade % 2 == 1) return this;
 
 		}
-		return false;
+		
+		Optional<ObjetoGrafico> encontrado = objetosFilhos.stream().filter(f -> f.isSelecionado(xClique, yClique) != null).findFirst();
+		return encontrado.isPresent() ? encontrado.get() : null;
 	}
 
 	private boolean isPontoIntersecciona(int xClique, int yClique, Point4D ponto1, Point4D ponto2) {

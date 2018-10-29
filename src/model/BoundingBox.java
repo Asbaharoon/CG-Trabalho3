@@ -14,7 +14,7 @@ public final class BoundingBox {
 
 
 	public BoundingBox() {
-		this(0, 0, 0, 0, 0, 0);
+		this(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	}
 	
 	public BoundingBox(double smallerX, double smallerY, double smallerZ, double greaterX, double greaterY, double greaterZ) {
