@@ -25,6 +25,7 @@ public class ObjetoGrafico {
 	public LinkedList<Point4D> getPontos() {
 		return pontos;
 	}
+        
 
 	public void adicionarPonto(Point4D point4d) {
 		if (this.pontos.isEmpty()) {
