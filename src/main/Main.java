@@ -108,38 +108,46 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 			}
 			Mundo.getInstance().atualizarPoligonoSelecionado(objetoGrafico);
 		} else if (SwingUtilities.isMiddleMouseButton(e)) {
-                    double distancia = 0;
-                    double menorDistancia = 0;
-                    for (ObjetoGrafico objeto : Mundo.getInstance().getObjetosGraficos()) {
-                        if(!objeto.getObjetosFilhos().isEmpty()){
-                            for (ObjetoGrafico filhos : objeto.getObjetosFilhos()){
-                                for(Point4D pontosFilho : filhos.getPontos()){
-                                    distancia = Mundo.getInstance().calcularDistanciaEntrePontos(pontosFilho.GetX(), x, pontosFilho.GetY(), y);
-                                    if(menorDistancia == 0)
-                                        menorDistancia = distancia;
-                                    if(distancia < menorDistancia){
-                                        menorDistancia = distancia;
-                                        Mundo.getInstance().atualizarPoligonoSelecionado(objeto);
-                                        Mundo.getInstance().marcarPontoSelecionado(pontosFilho);
-                                        Mundo.getInstance().marcarDesenhando();
-                                    }
-                                }
-                            }
-                        }
-                        for(Point4D pontos : objeto.getPontos()){
-                            distancia = Mundo.getInstance().calcularDistanciaEntrePontos(pontos.GetX(), x, pontos.GetY(), y);
-                            if(menorDistancia == 0)
-                                menorDistancia = distancia;
-                            if(distancia < menorDistancia){
-                                menorDistancia = distancia;
-                                Mundo.getInstance().marcarPontoSelecionado(pontos);
-                                Mundo.getInstance().atualizarPoligonoSelecionado(objeto);
-                                Mundo.getInstance().marcarDesenhando();
-                            }
-                        }
-                    }
-                    
-                }
+            if (!Mundo.getInstance().isPontoSelecionado()) {
+				double distancia = 0;
+	            double menorDistancia = 0;
+	            for (ObjetoGrafico objeto : Mundo.getInstance().getObjetosGraficos()) {
+	                if (!objeto.getObjetosFilhos().isEmpty()){
+	                    for (ObjetoGrafico filhos : objeto.getObjetosFilhos()){
+	                        for (Point4D pontosFilho : filhos.getPontos()){
+	                            distancia = Mundo.getInstance().calcularDistanciaEntrePontos(pontosFilho.GetX(), x, pontosFilho.GetY(), y);
+	                            if (menorDistancia == 0)
+	                                menorDistancia = distancia;
+	                            if (distancia < menorDistancia){
+	                                menorDistancia = distancia;
+	                                Mundo.getInstance().atualizarPoligonoSelecionado(objeto);
+	                                Mundo.getInstance().marcarPontoSelecionado(pontosFilho);
+	                                Mundo.getInstance().marcarDesenhando();
+	                            }
+	                        }
+	                    }
+	                }
+	                for (Point4D pontos : objeto.getPontos()){
+	                    distancia = Mundo.getInstance().calcularDistanciaEntrePontos(pontos.GetX(), x, pontos.GetY(), y);
+	                    if (menorDistancia == 0)
+	                        menorDistancia = distancia;
+	                    if (distancia < menorDistancia){
+	                        menorDistancia = distancia;
+	                        Mundo.getInstance().marcarPontoSelecionado(pontos);
+	                        Mundo.getInstance().atualizarPoligonoSelecionado(objeto);
+	                        Mundo.getInstance().marcarDesenhando();
+	                    }
+	                }
+	            }
+            } else {
+            	Mundo.getInstance().getPontoMaisProximo().SetX(x);
+            	Mundo.getInstance().getPontoMaisProximo().SetY(y);
+            	Mundo.getInstance().desmarcarDesenhando();
+            	Mundo.getInstance().getPoligonoSelecionado().getBoundingBox().atualizarBBox(x, y, 0);
+            	Mundo.getInstance().atualizarPoligonoSelecionado(null);
+            	Mundo.getInstance().desmarcarPontoSelecionado();
+            }
+        }
 
 		glDrawable.display();
 	}
@@ -249,6 +257,15 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 //				Mundo.getInstance().atualizarPoligonoSelecionado(null);
 //                            }
                                 
+			case KeyEvent.VK_DELETE:
+				if (!Mundo.getInstance().isPontoSelecionado()) {
+					Mundo.getInstance().getObjetosGraficos().remove(poligonoSelecionado);
+				} else {
+					Mundo.getInstance().getPoligonoSelecionado().removerPonto(Mundo.getInstance().getPontoMaisProximo());
+					Mundo.getInstance().desmarcarPontoSelecionado();
+				}
+				Mundo.getInstance().desmarcarDesenhando();
+				Mundo.getInstance().atualizarPoligonoSelecionado(null);
 			default:
 				break;
 			}
