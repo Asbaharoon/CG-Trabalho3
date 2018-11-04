@@ -21,8 +21,7 @@ public class Main implements GLEventListener, MouseMotionListener, MouseListener
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-        
-
+	
 	public void init(GLAutoDrawable drawable) {
 		glDrawable = drawable;
 		gl = drawable.getGL();

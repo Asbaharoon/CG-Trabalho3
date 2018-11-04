@@ -18,13 +18,25 @@ public class Camera {
 		atualizaOrtho();
 	}
 
+	/**
+	 * Aproxima a câmera.<br>
+	 * MÉTODO AINDA NÃO IMPLEMENTADO!
+	 */
 	public void zoom() {
 	
 	}
 	
+	/**
+	 * Afasta a câmera.<br>
+	 * MÉTODO AINDA NÃO IMPLEMENTADO!
+	 */
 	public void pan() {
 		
 	}
+	
+	/**
+	 * Reposiciona a câmera.
+	 */
 	public void atualizaOrtho() {
 		glu.gluOrtho2D(xMin, xMax, yMin, yMax);
 	}

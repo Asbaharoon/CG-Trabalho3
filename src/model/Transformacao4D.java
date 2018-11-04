@@ -22,7 +22,9 @@ import java.lang.Math;
 public final class Transformacao4D {
 	static final double DEG_TO_RAD = 0.017453292519943295769236907684886;
 
-    /// \brief Cria uma matriz de Trasnformacao com uma matriz Identidade.
+	/**
+	 * Cria uma matriz de Trasnformacao com uma matriz Identidade.
+	 */
 	private double[] matriz = {	
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -32,7 +34,9 @@ public final class Transformacao4D {
 	public Transformacao4D() {
 	}
 
-	/// Atribui os valores de uma matriz Identidade a matriz de Transformacao.
+	/**
+	 * Atribui os valores de uma matriz Identidade a matriz de Transformacao.
+	 */
 	public void atribuirIdentidade() {
 		for (int i=0; i<16; ++i) {
 			matriz[i] = 0.0;
@@ -40,31 +44,41 @@ public final class Transformacao4D {
 		matriz[0] = matriz[5] = matriz[10] = matriz[15] = 1.0;
 	}
 
-	/// Atribui os valores de Translacao (tx,ty,tz) a matriz de Transformacao.
-	/// Elemento Neutro eh 0 (zero).
-	public void atribuirTranslacao(double tx, double ty, double tz)
-	{
+	/**
+	 * Atribui os valores de Translacao (tx,ty,tz) a matriz de Transformacao.<br>
+	 * Elemento Neutro é 0 (zero).
+	 * @param tx valor x para Translacao.
+	 * @param ty valor y para Translacao.
+	 * @param tz valor z para Translacao.
+	 */
+	public void atribuirTranslacao(double tx, double ty, double tz)	{
 	    atribuirIdentidade();
 	    matriz[12] = tx;
 	    matriz[13] = ty;
 	    matriz[14] = tz;
 	}
-
-	/// Atribui o valor de Escala (Ex,Ey,Ez) a matriz de Transformacao.
-	/// Elemento Neutro eh 1 (um).
-	/// Se manter os valores iguais de Ex,Ey e Ez o objeto vai ser reduzido ou ampliado proporcionalmente.
-	public void atribuirEscala(double sX, double sY, double sZ)
-	{
+	
+	/**
+	 * Atribui o valor de Escala (Ex,Ey,Ez) a matriz de Transformacao.<br>
+	 * Elemento Neutro é 1 (um).<br>
+	 * Se manter os valores iguais de Ex,Ey e Ez o objeto vai ser reduzido ou ampliado proporcionalmente.
+	 * @param sX valor de x para Escala.
+	 * @param sY valor de y para Escala.
+	 * @param sZ valor de z para Escala.
+	 */
+	public void atribuirEscala(double sX, double sY, double sZ)	{
 	    atribuirIdentidade();
 	    matriz[0] =  sX;
 	    matriz[5] =  sY;
 	    matriz[10] = sZ;
 	}
 	
-	/// Atribui o valor de Rotacao (angulo) no eixo X a matriz de Transformacao.
-	/// Elemento Neutro eh 0 (zero).
-	public void atribuirRotacaoX(double radians)
-	{
+	/**
+	 * Atribui o valor de Rotacao (angulo) no eixo X a matriz de Transformacao.<br>
+	 * Elemento Neutro é 0 (zero).
+	 * @param radians radiano (razão entre o comprimento de um arco e o seu raio).
+	 */
+	public void atribuirRotacaoX(double radians) {
 	    atribuirIdentidade();
 	    matriz[5] =   Math.cos(radians);
 	    matriz[9] =  -Math.sin(radians);
@@ -72,10 +86,12 @@ public final class Transformacao4D {
 	    matriz[10] =  Math.cos(radians);
 	}
 
-	/// Atribui o valor de Rotacao (angulo) no eixo Y a matriz de Transformacao.
-	/// Elemento Neutro eh 0 (zero).
-	public void atribuirRotacaoY(double radians)
-	{
+	/**
+	 * Atribui o valor de Rotacao (angulo) no eixo Y a matriz de Transformacao.<br>
+	 * Elemento Neutro é 0 (zero).
+	 * @param radians radiano (razão entre o comprimento de um arco e o seu raio).
+	 */
+	public void atribuirRotacaoY(double radians) {
 	    atribuirIdentidade();
 	    matriz[0] =   Math.cos(radians);
 	    matriz[8] =   Math.sin(radians);
@@ -83,10 +99,12 @@ public final class Transformacao4D {
 	    matriz[10] =  Math.cos(radians);
 	}
 
-	/// Atribui o valor de Rotacao (angulo) no eixo Z a matriz de Transformacao.
-	/// Elemento Neutro eh 0 (zero).
-	public void atribuirRotacaoZ(double radians)
-	{
+	/**
+	 * Atribui o valor de Rotacao (angulo) no eixo Z a matriz de Transformacao.
+	 * Elemento Neutro é 0 (zero).
+	 * @param radians radiano (razão entre o comprimento de um arco e o seu raio).
+	 */
+	public void atribuirRotacaoZ(double radians) {
 	    atribuirIdentidade();
 	    matriz[0] =  Math.cos(radians);
 	    matriz[4] = -Math.sin(radians);
@@ -124,8 +142,7 @@ public final class Transformacao4D {
 		return matriz;	
 	}
 	
-	public void SetData(double[] data)
-	{
+	public void SetData(double[] data) {
 	    int i;
 
 	    for (i=0; i<16; i++)

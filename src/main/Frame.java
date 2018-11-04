@@ -47,6 +47,10 @@ public class Frame extends JFrame{
 		canvas.requestFocus();			
 	}		
 	
+	/*/**
+	 * Método principal do programa.
+	 * @param args argumentos
+	 */
 	public static void main(String[] args) {
 		new Frame().setVisible(true);
 	}
