@@ -41,13 +41,16 @@ public class ObjetoGrafico {
 
 	/**
 	 * Remove vértice do poligono.
-	 * @param point4d objeto que armaneza a posição do vértice no plano.
+	 * @param pontoRemover objeto que armaneza a posição do vértice no plano.
 	 */
 	public void removerPonto(Point4D pontoRemover) {
 		pontos.remove(pontoRemover);
 		atualizarBoundingBox();
 	}
 	
+	/**
+	 * Atualiza a posição da Bounding Box.
+	 */
 	public void atualizarBoundingBox() {
 		boolean isFirst = true;
 		for (Point4D point4d : pontos) {
