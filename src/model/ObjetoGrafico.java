@@ -43,8 +43,21 @@ public class ObjetoGrafico {
 	 * Remove vértice do poligono.
 	 * @param point4d objeto que armaneza a posição do vértice no plano.
 	 */
-	public void removerPonto(Point4D point4d) {
-		pontos.remove(point4d);
+	public void removerPonto(Point4D pontoRemover) {
+		pontos.remove(pontoRemover);
+		atualizarBoundingBox();
+	}
+	
+	public void atualizarBoundingBox() {
+		boolean isFirst = true;
+		for (Point4D point4d : pontos) {
+			if (isFirst) {
+				boundingBox = new BoundingBox(point4d.GetX(), point4d.GetY(), 0, point4d.GetX(), point4d.GetY(), 0);
+				isFirst = false;
+			} else {
+				boundingBox.atualizarBBox(point4d);
+			}
+		}
 	}
 
 	/**
@@ -249,5 +262,5 @@ public class ObjetoGrafico {
 		double menorY = pontos.stream().mapToDouble(Point4D::GetY).min().getAsDouble();
 		return new Point4D(((maiorX + menorX) / 2) * -1, ((maiorY + menorY) / 2) * -1);
 	}
-	
+
 }
